@@ -47,6 +47,10 @@
 		private var GDN_10:MailUnknown;
 		private var GDN_11:NodeChute;
 		private var GDN_12:NodeSlide;
+		private var GDN_13:MailGarbage;
+		private var GDN_14:MailContraband;
+		private var GDN_15:NodeIncinerator;
+		private var GDN_16:NodeXRay;
 		
 		// timer
 		public var timerTick:Number = 1000 / 30;		// time to take off per frame
@@ -297,7 +301,9 @@
 				var mailFailure:Boolean = false;		// check if any Mail is in failure state
 				for each (var mail:ABST_Mail in mailArray)
 				{
-					var mailState:int = mail.step();
+					var mailState:int = mail.mailState;
+					if (!mail.destroyed)
+						mailState = mail.step();
 					if (mailState != PP.MAIL_SUCCESS)
 						allSuccess = false;
 					if (mailState == PP.MAIL_FAILURE)
@@ -380,7 +386,7 @@
 		protected function onRetry(e:MouseEvent):void
 		{
 			completed = true;
-			// TODO retry logic
+			engine.retryFlag = true;
 			destroy(null);
 		}
 		
